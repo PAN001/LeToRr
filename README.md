@@ -2,7 +2,7 @@
 Code generation is the task of parsing natural language statements into source code like Python. Neural code generation models like TranX (Yin and Neubig, 2018) generate hypotheses by beam search and output the code with highest score, which however is not necessarily the best one. In this work, we propose a re-rank based framework which aims at re-ranking these hypothesis candidates. A classifier is trained to re-rank candidates using neural based and hand-crafted features. While our re-rank framework can be easily generalized to other code generation models or natural language related tasks such as machine translation, we extend TranX with our framework and demonstrate its effectiveness on CoNaLa (Yin et al., 2018a) and Django (Oda et al., 2015a) dataset. Experiments show that our LeToRr framework improves the SOTA performance by **+3.4** ACC and **+4.6** BLEU on Django dataset.
 
 # Introduction
-Code generation is the task of parsing natural language utterances into source code written in general programming language, {\em e.g.}, Python.
+Code generation is the task of parsing natural language utterances into source code written in general programming language, e.g., Python.
 Natural language to code (NL2Code) is a challenging NLP task for several reasons:
 1. Natural language (NL) as the input is highly unstructured, while source code as the output needs to be well-structured. One can describe the intention in NL in different ways. There can also be several corresponding source code snippets to achieve the same intention.
 2. It is non-trivial to model the semantics and underlying knowledge of a general programming language.
@@ -63,7 +63,7 @@ As introduced above, the system is given one natural language utterance which de
 Figure 6 shows an overview of our TranX + Re-ranking architecture. The design of re-rank classifier is discussed from sub-section 3.1 to 3.3 and feature extraction in sub-section 3.4.
 
 <p align="center">
-<img src="img/arch.jpeg" width="600" align="middle"/>
+<img src="img/arch.jpeg" width="800" align="middle"/>
 <h4 align="center"> Figure 6. Architecture </h4>
 </p>
 
@@ -104,7 +104,7 @@ where
 where $h_i^{(1)}$ and $h_i^{(2)}$ are the feature vectors in a pair, $\left \| \cdot  \right \|$ denotes $L_2$ norm, m is the total number of training samples, and $C > 0$ is a coefficient. It is equivalent to the non-constrained optimization function which minimizes the regularized hinge loss function:
 
 <p align="center">
-<img src="img/math_4.png" width="300" align="middle"/>
+<img src="img/math_4.png" width="400" align="middle"/>
 </p>
 
 where $\lambda = \frac{1}{2C}$ (Li, 2011b).
@@ -158,26 +158,26 @@ In listwise ranking, it is necessary to evaluate the goodness of a ranking again
 Given a natural language intent ui and decoded candidate hypotheses set Hi, denote the ranking list on Hi based on initial confidence scores from decoder as Ri, and Yi as the oracle ranking based on BLEU score of each hypothesis. DCG at rank j is defined as :
 
 <p align="center">
-<img src="img/math_8.png" width="150" align="middle"/>
+<img src="img/math_8.png" width="200" align="middle"/>
 </p>
 
 where Gi (·) denotes the gain function and Di (·) denotes a rank discount function. It is the cumulative gain of accessing the information from position 1 to position j. Normally, the gain function is chosen to be the exponential function of rank, which implies that the satisfaction of accessing information exponentially increases when the rank of relevance of information increases (Li, 2011b).
 
 <p align="center">
-<img src="img/math_9.png" width="120" align="middle"/>
+<img src="img/math_9.png" width="150" align="middle"/>
 </p>
 
 where yi,k is the rank of hypothesis hk in the ranking ri. The discount function is usually defined as a logarithmic function of rank, which implies that the satisfaction of accessing information logarithmically decreases when the rank of access increases.
 
 <p align="center">
-<img src="img/math_10.png" width="120" align="middle"/>
+<img src="img/math_10.png" width="170" align="middle"/>
 </p>
 
 #### NDCG
 NDCG is normalized version of DCG:
 
 <p align="center">
-<img src="img/math_11.png" width="200" align="middle"/>
+<img src="img/math_11.png" width="250" align="middle"/>
 </p>
 
 where Gmax,i (j ) denotes the normalizing factor which makes top 1 NDCG score of perfect rank ri* is 1. In summary, NDCG and DCG both tend to assign high scores to the ranking lists where relevant candidates are ranked high. For ideal or perfect rankings, the NDCG value at each position is always one, while for imperfect rankings, the NDCG values are usually less than one.
@@ -186,7 +186,7 @@ where Gmax,i (j ) denotes the normalizing factor which makes top 1 NDCG score of
 MAP is averaged (over queries) version of Average Precision (AP):
 
 <p align="center">
-<img src="img/math_12.png" width="200" align="middle"/>
+<img src="img/math_12.png" width="180" align="middle"/>
 </p>
 
 where label yi,j is a binary classification indicates whether the candidate is correct or not, and P(j) for intent uj is defined as:
@@ -207,13 +207,13 @@ Code annotation is the task of describing code snippets in NL statement. Intuiti
 The probability of generating ith word wi given code c and previous words w1...i−1 is as follows:
 
 <p align="center">
-<img src="img/math_14.png" width="300" align="middle"/>
+<img src="img/math_14.png" width="350" align="middle"/>
 </p>
 
 where:
 
 <p align="center">
-<img src="img/math_15.png" width="300" align="middle"/>
+<img src="img/math_15.png" width="350" align="middle"/>
 </p>
 
 ### (NL, Code) Similarity
@@ -222,7 +222,7 @@ Another idea is to model the joint probability distribution P r(NL, Code). There
 Specifically, we use Doc2Vec (Le and Mikolov, 2014) to extract sentence vectors and compute their distance using cosine similarity.
 
 <p align="center">
-<img src="img/doc2vec.png" width="500" align="middle"/>
+<img src="img/doc2vec.png" width="600" align="middle"/>
 <h4 align="center"> Figure 3. Doc2Vec (Le and Mikolov, 2014) </h4>
 </p>
 
@@ -230,13 +230,13 @@ Specifically, we use Doc2Vec (Le and Mikolov, 2014) to extract sentence vectors 
 We can also train a language model to compute the likelihood of generated code. The training process is unsupervised, therefore data are easy to obtain. Specifically, a standard LSTM language model (Zaremba et al., 2014) is used to model P r(Code):
 
 <p align="center">
-<img src="img/math_16.png" width="240" align="middle"/>
+<img src="img/math_16.png" width="300" align="middle"/>
 </p>
 
 where a code snippet is represented as a sequence of tokens. At ith RNN time step, the model computes the probability for generating the ith token token:
 
 <p align="center">
-<img src="img/math_17.png" width="250" align="middle"/>
+<img src="img/math_17.png" width="300" align="middle"/>
 </p>
 
 where hi is the hidden state at ith time step.
@@ -294,17 +294,17 @@ Figure 5 gives an example of how bootstrap creates three more samples from one s
 Table 3 and Table 4 show the performance gain of different re-rankers. It is observed that pairwise SVR based re-ranker achieves best performance gain from original BLEU score of **24.77** to **33.51** after re-ranking on CoNaLa dataset, and from accuracy of **76.73** to **81.33** on Django.
 
 <p align="center">
-<img src="img/table3.png" width="500" align="middle"/>
+<img src="img/table3.png" width="700" align="middle"/>
 <h4 align="center"> Table 3. Comparison of different re-rankers on CoNaLa </h4>
 </p>
 
 <p align="center">
-<img src="img/table4.png" width="500" align="middle"/>
+<img src="img/table4.png" width="700" align="middle"/>
 <h4 align="center"> Table 4. Comparison of different re-rankers on Django </h4>
 </p>
 
 <p align="center">
-<img src="img/table5.png" width="400" align="middle"/>
+<img src="img/table5.png" width="550" align="middle"/>
 <h4 align="center"> Table 5. Performance gain of pairwise SVR-based re-ranking on CoNaLa </h4>
 </p>
 
